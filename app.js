@@ -288,6 +288,14 @@ zoomRange.addEventListener('input', e => setZoom(parseInt(e.target.value, 10)));
   document.addEventListener(evt, e => e.preventDefault(), { passive: false });
 });
 
+// stronger iOS pinch/zoom block: allow only scrolling inside preview
+const previewWrap = document.querySelector('.preview-wrap');
+document.addEventListener('touchmove', (e) => {
+  if (!previewWrap.contains(e.target)) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
 loadCustomTheme();
 applyTheme('github');
 setZoom(100);
