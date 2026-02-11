@@ -12,6 +12,10 @@ const themeEditorBtn = document.getElementById('themeEditorBtn');
 const applyThemeBtn = document.getElementById('applyThemeBtn');
 const exportHtmlBtn = document.getElementById('exportHtmlBtn');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
+const zoomOut = document.getElementById('zoomOut');
+const zoomIn = document.getElementById('zoomIn');
+const zoomRange = document.getElementById('zoomRange');
+const zoomLabel = document.getElementById('zoomLabel');
 
 const files = [];
 let currentTheme = 'github';
@@ -265,4 +269,17 @@ applyThemeBtn.addEventListener('click', () => {
 });
 
 loadCustomTheme();
+function setZoom(value) {
+  const v = Math.max(50, Math.min(200, value));
+  zoomRange.value = v;
+  zoomLabel.textContent = `${v}%`;
+  document.documentElement.style.setProperty('--preview-zoom', (v / 100).toString());
+}
+
+zoomOut.addEventListener('click', () => setZoom(parseInt(zoomRange.value, 10) - 10));
+zoomIn.addEventListener('click', () => setZoom(parseInt(zoomRange.value, 10) + 10));
+zoomRange.addEventListener('input', e => setZoom(parseInt(e.target.value, 10)));
+
+loadCustomTheme();
 applyTheme('github');
+setZoom(100);
