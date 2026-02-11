@@ -8,59 +8,73 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Markdown Previewer</div>
-    <div class="toolbar">
-      <label class="btn primary">
-        <input id="folderInput" type="file" webkitdirectory directory multiple hidden />
-        フォルダ
-      </label>
-      <label class="btn">
-        <input id="fileInput" type="file" accept=".md,.markdown,text/markdown" multiple hidden />
-        ファイル
-      </label>
-      <div class="divider"></div>
-      <button id="exportHtmlBtn" class="btn">HTML</button>
-      <button id="exportPdfBtn" class="btn">PDF</button>
-      <div class="divider"></div>
-      <select id="themeSelect" class="select">
-        <option value="github">GitHub</option>
-        <option value="github-dark">GitHub Dark</option>
-        <option value="solarized-light">Solarized Light</option>
-        <option value="solarized-dark">Solarized Dark</option>
-        <option value="monokai">Monokai</option>
-        <option value="dracula">Dracula</option>
-        <option value="custom">Custom…</option>
-      </select>
-      <button id="themeEditorBtn" class="btn">カスタム</button>
-    </div>
+    <button id="drawerToggle" class="icon-btn" aria-label="Menu">☰</button>
+    <div class="header-title">Markdown Previewer</div>
+    <button id="exportBtn" class="icon-btn" aria-label="Export">⤓</button>
   </header>
 
-  <main class="layout" id="dropZone">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-title">Files</div>
+  <aside id="drawer" class="drawer">
+    <div class="drawer-header">
+      <div class="drawer-title">Options</div>
+      <button id="drawerClose" class="icon-btn">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <label class="btn primary block">
+          <input id="folderInput" type="file" webkitdirectory directory multiple hidden />
+          フォルダを選択
+        </label>
+        <label class="btn block">
+          <input id="fileInput" type="file" accept=".md,.markdown,text/markdown" multiple hidden />
+          ファイルを選択
+        </label>
+      </div>
+      <div class="drawer-section">
+        <button id="exportHtmlBtn" class="btn block">HTML書き出し</button>
+        <button id="exportPdfBtn" class="btn block">PDF書き出し</button>
+      </div>
+      <div class="drawer-section">
+        <div class="label">テーマ</div>
+        <select id="themeSelect" class="select block">
+          <option value="github">GitHub</option>
+          <option value="github-dark">GitHub Dark</option>
+          <option value="solarized-light">Solarized Light</option>
+          <option value="solarized-dark">Solarized Dark</option>
+          <option value="monokai">Monokai</option>
+          <option value="dracula">Dracula</option>
+          <option value="custom">Custom…</option>
+        </select>
+        <button id="themeEditorBtn" class="btn block">カスタムテーマ</button>
+      </div>
+      <div class="drawer-section">
+        <div class="label">ファイル一覧</div>
         <div class="search-wrap">
           <input id="searchInput" type="search" placeholder="検索…" />
         </div>
+        <ul id="fileList" class="file-list"></ul>
       </div>
-      <ul id="fileList" class="file-list"></ul>
-    </aside>
+    </div>
+  </aside>
 
+  <main class="stage" id="dropZone">
     <section class="viewer">
-      <div class="viewer-header">
-        <div id="currentFile" class="file-title">(未選択)</div>
-        <div class="zoom-controls">
-          <button id="zoomOut" class="btn icon">−</button>
-          <input id="zoomRange" type="range" min="50" max="200" value="100" />
-          <button id="zoomIn" class="btn icon">＋</button>
-          <span id="zoomLabel">100%</span>
-        </div>
-      </div>
-      <div class="preview-wrap">
+      <div class="preview-shell">
         <iframe id="previewFrame" class="preview-frame" title="Markdown Preview"></iframe>
       </div>
     </section>
   </main>
+
+  <div class="floating-zoom">
+    <button id="zoomOut" class="btn icon">−</button>
+    <input id="zoomRange" type="range" min="50" max="200" value="100" />
+    <button id="zoomIn" class="btn icon">＋</button>
+    <span id="zoomLabel">100%</span>
+  </div>
+
+  <label class="fab">
+    <input id="fileFab" type="file" accept=".md,.markdown,text/markdown" multiple hidden />
+    ＋
+  </label>
 
   <dialog id="themeDialog" class="theme-dialog">
     <form method="dialog">

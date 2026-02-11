@@ -1,9 +1,9 @@
 const dropZone = document.getElementById('dropZone');
 const fileListEl = document.getElementById('fileList');
 const previewFrame = document.getElementById('previewFrame');
-const currentFileEl = document.getElementById('currentFile');
 const folderInput = document.getElementById('folderInput');
 const fileInput = document.getElementById('fileInput');
+const fileFab = document.getElementById('fileFab');
 const searchInput = document.getElementById('searchInput');
 const themeSelect = document.getElementById('themeSelect');
 const themeDialog = document.getElementById('themeDialog');
@@ -16,6 +16,10 @@ const zoomOut = document.getElementById('zoomOut');
 const zoomIn = document.getElementById('zoomIn');
 const zoomRange = document.getElementById('zoomRange');
 const zoomLabel = document.getElementById('zoomLabel');
+const drawer = document.getElementById('drawer');
+const drawerToggle = document.getElementById('drawerToggle');
+const drawerClose = document.getElementById('drawerClose');
+const exportBtn = document.getElementById('exportBtn');
 
 const files = [];
 let currentTheme = 'github';
@@ -250,6 +254,14 @@ function downloadBlob(blob, filename) {
 // Events
 folderInput.addEventListener('change', e => addFiles(e.target.files));
 fileInput.addEventListener('change', e => addFiles(e.target.files));
+fileFab.addEventListener('change', e => addFiles(e.target.files));
+
+exportBtn.addEventListener('click', () => {
+  drawer.classList.add('open');
+});
+
+drawerToggle.addEventListener('click', () => drawer.classList.add('open'));
+drawerClose.addEventListener('click', () => drawer.classList.remove('open'));
 searchInput.addEventListener('input', renderFileList);
 
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drop-hint'); });
@@ -310,10 +322,9 @@ zoomRange.addEventListener('input', e => setZoom(parseInt(e.target.value, 10)));
 });
 
 // stronger iOS pinch/zoom block: allow scrolling only in sidebar or preview iframe
-const previewWrap = document.querySelector('.preview-wrap');
-const sidebar = document.querySelector('.sidebar');
+const previewWrap = document.querySelector('.preview-shell');
 document.addEventListener('touchmove', (e) => {
-  if (!(previewWrap.contains(e.target) || sidebar.contains(e.target))) {
+  if (!previewWrap.contains(e.target)) {
     e.preventDefault();
   }
 }, { passive: false });
