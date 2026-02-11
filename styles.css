@@ -24,6 +24,16 @@ body {
   color: var(--fg);
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(9,105,218,0.08), transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, rgba(88,166,255,0.08), transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -31,9 +41,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--topbar-bg);
+  backdrop-filter: saturate(180%) blur(12px);
 }
 
 .brand { font-weight: 600; }
@@ -44,10 +55,11 @@ body {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--fg);
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 7px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
 }
 
 .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
@@ -62,8 +74,9 @@ body {
 
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  min-height: calc(100vh - 52px);
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 56px);
+  gap: 0;
 }
 
 .sidebar {
@@ -72,6 +85,7 @@ body {
   color: var(--sidebar-fg);
   display: flex;
   flex-direction: column;
+  box-shadow: inset -1px 0 0 var(--border);
 }
 
 .sidebar-header {
@@ -122,9 +136,11 @@ body {
 }
 
 .preview {
-  padding: 24px 32px;
+  padding: 28px 40px;
   overflow: auto;
-  line-height: 1.6;
+  line-height: 1.7;
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 .preview h1, .preview h2, .preview h3 { border-bottom: 1px solid var(--border); padding-bottom: 6px; }
@@ -152,7 +168,22 @@ body {
   outline-offset: -10px;
 }
 
-@media (max-width: 900px) {
+/* Breakpoints:
+   - mac desktop app: >= 1200px
+   - iPad: 768px–1199px
+   - iPhone: <= 767px
+*/
+@media (max-width: 1199px) {
+  .layout { grid-template-columns: 240px 1fr; }
+  .preview { padding: 22px 28px; }
+}
+
+@media (max-width: 767px) {
+  .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .controls { width: 100%; overflow-x: auto; padding-bottom: 4px; }
   .layout { grid-template-columns: 1fr; }
   .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+  .viewer-header { padding: 10px 14px; }
+  .preview { padding: 18px 16px; max-width: 100%; }
+  .file-list li { padding: 10px 12px; }
 }

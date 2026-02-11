@@ -3,6 +3,7 @@ const fileListEl = document.getElementById('fileList');
 const previewEl = document.getElementById('preview');
 const currentFileEl = document.getElementById('currentFile');
 const folderInput = document.getElementById('folderInput');
+const fileInput = document.getElementById('fileInput');
 const searchInput = document.getElementById('searchInput');
 const themeSelect = document.getElementById('themeSelect');
 const themeDialog = document.getElementById('themeDialog');
@@ -229,6 +230,7 @@ function downloadBlob(blob, filename) {
 
 // Events
 folderInput.addEventListener('change', e => addFiles(e.target.files));
+fileInput.addEventListener('change', e => addFiles(e.target.files));
 searchInput.addEventListener('input', renderFileList);
 
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drop-hint'); });
