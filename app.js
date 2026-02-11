@@ -273,12 +273,20 @@ function setZoom(value) {
   const v = Math.max(50, Math.min(200, value));
   zoomRange.value = v;
   zoomLabel.textContent = `${v}%`;
-  document.documentElement.style.setProperty('--preview-zoom', (v / 100).toString());
+  const scale = v / 100;
+  document.documentElement.style.setProperty('--preview-zoom', scale.toString());
+  previewEl.style.transform = `scale(${scale})`;
+  previewEl.style.width = `${100 / scale}%`;
 }
 
 zoomOut.addEventListener('click', () => setZoom(parseInt(zoomRange.value, 10) - 10));
 zoomIn.addEventListener('click', () => setZoom(parseInt(zoomRange.value, 10) + 10));
 zoomRange.addEventListener('input', e => setZoom(parseInt(e.target.value, 10)));
+
+// prevent iOS pinch-zoom on whole page
+['gesturestart','gesturechange','gestureend'].forEach(evt => {
+  document.addEventListener(evt, e => e.preventDefault(), { passive: false });
+});
 
 loadCustomTheme();
 applyTheme('github');

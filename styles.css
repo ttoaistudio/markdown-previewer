@@ -13,6 +13,7 @@
   --table-border: #d0d7de;
   --preview-bg: #ffffff;
   --topbar-bg: #ffffff;
+  --preview-zoom: 1;
 }
 
 * { box-sizing: border-box; }
@@ -152,9 +153,10 @@ body::before {
   line-height: 1.7;
   max-width: none;
   margin: 0;
-  transform: scale(var(--preview-zoom, 1));
+  transform: scale(var(--preview-zoom));
   transform-origin: top left;
-  width: calc(100% / var(--preview-zoom, 1));
+  width: calc(100% / var(--preview-zoom));
+  display: inline-block;
 }
 
 .preview h1, .preview h2, .preview h3 { border-bottom: 1px solid var(--border); padding-bottom: 6px; }
