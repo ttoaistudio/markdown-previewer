@@ -1,6 +1,6 @@
 const dropZone = document.getElementById('dropZone');
 const fileListEl = document.getElementById('fileList');
-const previewEl = document.getElementById('preview');
+const previewFrame = document.getElementById('previewFrame');
 const currentFileEl = document.getElementById('currentFile');
 const folderInput = document.getElementById('folderInput');
 const fileInput = document.getElementById('fileInput');
@@ -99,7 +99,8 @@ function openFile(idx) {
   f.active = true;
   currentFileEl.textContent = f.path;
   f.file.text().then(text => {
-    previewEl.innerHTML = markdownToHtml(text);
+    const html = markdownToHtml(text);
+    renderPreview(html);
     renderFileList();
   });
 }
@@ -203,25 +204,39 @@ function markdownToHtml(md) {
   return html;
 }
 
-async function exportHtml() {
+async function renderPreview(contentHtml) {
   const cssText = await fetch('styles.css').then(r => r.text()).catch(() => '');
   const root = getComputedStyle(document.documentElement);
   const keys = ['--bg','--fg','--muted','--border','--accent','--code-bg','--sidebar-bg','--sidebar-fg','--link','--blockquote','--table-border','--preview-bg','--topbar-bg'];
   const lines = keys.map(k => `${k}: ${root.getPropertyValue(k)};`).join('');
-  const inlineCss = `:root{${lines}}\n${cssText}`;
+  const inlineCss = `:root{${lines}}\n${cssText}\n.preview{padding:28px 40px; line-height:1.7;} body{margin:0; overflow:auto;} `;
 
-  const blob = new Blob([
-    '<!doctype html><html><head><meta charset="utf-8">',
-    `<style>${inlineCss}</style>`,
-    '</head><body>',
-    `<article class="preview">${previewEl.innerHTML}</article>`,
-    '</body></html>'
-  ], { type: 'text/html' });
+  const scale = parseInt(zoomRange.value, 10) / 100;
+  const iframeHtml = `<!doctype html><html><head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>${inlineCss}</style></head>
+    <body>
+      <div id="wrap" style="transform:scale(${scale}); transform-origin: top left; width:${100/scale}%;">
+        <article class="preview">${contentHtml}</article>
+      </div>
+    </body></html>`;
+
+  previewFrame.srcdoc = iframeHtml;
+}
+
+async function exportHtml() {
+  const doc = previewFrame.contentDocument;
+  if (!doc) return;
+  const html = '<!doctype html>' + doc.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
   downloadBlob(blob, 'preview.html');
 }
 
 function exportPdf() {
-  window.print();
+  if (previewFrame.contentWindow) {
+    previewFrame.contentWindow.focus();
+    previewFrame.contentWindow.print();
+  }
 }
 
 function downloadBlob(blob, filename) {
@@ -274,9 +289,15 @@ function setZoom(value) {
   zoomRange.value = v;
   zoomLabel.textContent = `${v}%`;
   const scale = v / 100;
-  document.documentElement.style.setProperty('--preview-zoom', scale.toString());
-  previewEl.style.transform = `scale(${scale})`;
-  previewEl.style.width = `${100 / scale}%`;
+  // update iframe content scale
+  const doc = previewFrame.contentDocument;
+  if (doc) {
+    const wrap = doc.getElementById('wrap');
+    if (wrap) {
+      wrap.style.transform = `scale(${scale})`;
+      wrap.style.width = `${100 / scale}%`;
+    }
+  }
 }
 
 zoomOut.addEventListener('click', () => setZoom(parseInt(zoomRange.value, 10) - 10));
@@ -288,10 +309,11 @@ zoomRange.addEventListener('input', e => setZoom(parseInt(e.target.value, 10)));
   document.addEventListener(evt, e => e.preventDefault(), { passive: false });
 });
 
-// stronger iOS pinch/zoom block: allow only scrolling inside preview
+// stronger iOS pinch/zoom block: allow scrolling only in sidebar or preview iframe
 const previewWrap = document.querySelector('.preview-wrap');
+const sidebar = document.querySelector('.sidebar');
 document.addEventListener('touchmove', (e) => {
-  if (!previewWrap.contains(e.target)) {
+  if (!(previewWrap.contains(e.target) || sidebar.contains(e.target))) {
     e.preventDefault();
   }
 }, { passive: false });
