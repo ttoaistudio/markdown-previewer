@@ -8,18 +8,20 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Markdown Previewer (Local)</div>
-    <div class="controls">
-      <label class="btn">
+    <div class="brand">Markdown Previewer</div>
+    <div class="toolbar">
+      <label class="btn primary">
         <input id="folderInput" type="file" webkitdirectory directory multiple hidden />
-        📁 フォルダを選択
+        フォルダ
       </label>
       <label class="btn">
         <input id="fileInput" type="file" accept=".md,.markdown,text/markdown" multiple hidden />
-        🗂️ ファイルを選択
+        ファイル
       </label>
-      <button id="exportHtmlBtn" class="btn">⤓ HTML書き出し</button>
-      <button id="exportPdfBtn" class="btn">🖨️ PDF書き出し</button>
+      <div class="divider"></div>
+      <button id="exportHtmlBtn" class="btn">HTML</button>
+      <button id="exportPdfBtn" class="btn">PDF</button>
+      <div class="divider"></div>
       <select id="themeSelect" class="select">
         <option value="github">GitHub</option>
         <option value="github-dark">GitHub Dark</option>
@@ -29,14 +31,14 @@
         <option value="dracula">Dracula</option>
         <option value="custom">Custom…</option>
       </select>
-      <button id="themeEditorBtn" class="btn">🎨 カスタムテーマ</button>
+      <button id="themeEditorBtn" class="btn">カスタム</button>
     </div>
   </header>
 
   <main class="layout" id="dropZone">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <div class="hint">フォルダをドラッグ＆ドロップ、または選択</div>
+        <div class="sidebar-title">Files</div>
         <div class="search-wrap">
           <input id="searchInput" type="search" placeholder="検索…" />
         </div>
@@ -46,11 +48,11 @@
 
     <section class="viewer">
       <div class="viewer-header">
-        <div id="currentFile">(未選択)</div>
+        <div id="currentFile" class="file-title">(未選択)</div>
         <div class="zoom-controls">
-          <button id="zoomOut" class="btn">−</button>
+          <button id="zoomOut" class="btn icon">−</button>
           <input id="zoomRange" type="range" min="50" max="200" value="100" />
-          <button id="zoomIn" class="btn">＋</button>
+          <button id="zoomIn" class="btn icon">＋</button>
           <span id="zoomLabel">100%</span>
         </div>
       </div>

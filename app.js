@@ -209,7 +209,7 @@ async function renderPreview(contentHtml) {
   const root = getComputedStyle(document.documentElement);
   const keys = ['--bg','--fg','--muted','--border','--accent','--code-bg','--sidebar-bg','--sidebar-fg','--link','--blockquote','--table-border','--preview-bg','--topbar-bg'];
   const lines = keys.map(k => `${k}: ${root.getPropertyValue(k)};`).join('');
-  const inlineCss = `:root{${lines}}\n${cssText}\n.preview{padding:28px 40px; line-height:1.7;} body{margin:0; overflow:auto;} `;
+  const inlineCss = `:root{${lines}}\n${cssText}\n.preview{padding:28px 40px; line-height:1.7;} body{margin:0; overflow:auto; background:var(--preview-bg);} `;
 
   const scale = parseInt(zoomRange.value, 10) / 100;
   const iframeHtml = `<!doctype html><html><head><meta charset="utf-8">
@@ -222,12 +222,12 @@ async function renderPreview(contentHtml) {
     </body></html>`;
 
   previewFrame.srcdoc = iframeHtml;
+  previewFrame.dataset.lastHtml = iframeHtml;
 }
 
 async function exportHtml() {
-  const doc = previewFrame.contentDocument;
-  if (!doc) return;
-  const html = '<!doctype html>' + doc.documentElement.outerHTML;
+  const html = previewFrame.dataset.lastHtml;
+  if (!html) return;
   const blob = new Blob([html], { type: 'text/html' });
   downloadBlob(blob, 'preview.html');
 }

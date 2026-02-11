@@ -1,19 +1,21 @@
 :root {
-  --bg: #ffffff;
-  --fg: #24292f;
-  --muted: #57606a;
-  --border: #d0d7de;
-  --accent: #0969da;
-  --code-bg: #f6f8fa;
-  --sidebar-bg: #f6f8fa;
-  --sidebar-fg: #24292f;
-  --link: #0969da;
-  --blockquote: #6e7781;
+  --bg: #f7f6f3;
+  --fg: #2f3437;
+  --muted: #6b6f76;
+  --border: #e6e4e1;
+  --accent: #2f6feb;
+  --code-bg: #f2f1ee;
+  --sidebar-bg: #fbfaf8;
+  --sidebar-fg: #2f3437;
+  --link: #2f6feb;
+  --blockquote: #6b6f76;
   --kbd-bg: #eee;
-  --table-border: #d0d7de;
+  --table-border: #e6e4e1;
   --preview-bg: #ffffff;
-  --topbar-bg: #ffffff;
+  --topbar-bg: #ffffffcc;
   --preview-zoom: 1;
+  --radius: 10px;
+  --shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
 }
 
 * { box-sizing: border-box; }
@@ -32,8 +34,8 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(9,105,218,0.08), transparent 60%),
-              radial-gradient(900px 500px at 100% 0%, rgba(88,166,255,0.08), transparent 60%);
+  background: radial-gradient(900px 500px at 0% -10%, rgba(47,111,235,0.06), transparent 60%),
+              radial-gradient(900px 500px at 100% 0%, rgba(47,111,235,0.05), transparent 60%);
   pointer-events: none;
   z-index: -1;
 }
@@ -45,15 +47,17 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 18px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border);
   background: var(--topbar-bg);
   backdrop-filter: saturate(180%) blur(12px);
 }
 
-.brand { font-weight: 600; }
+.brand { font-weight: 600; letter-spacing: 0.2px; }
 
-.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.divider { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
 
 .btn {
   border: 1px solid var(--border);
@@ -62,9 +66,11 @@ body::before {
   padding: 7px 12px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12.5px;
   box-shadow: 0 1px 0 rgba(0,0,0,0.03);
 }
+
+.btn.icon { width: 28px; height: 28px; padding: 0; text-align: center; }
 
 .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
 
@@ -73,13 +79,13 @@ body::before {
   background: var(--bg);
   color: var(--fg);
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  height: calc(100vh - 56px);
+  grid-template-columns: 280px 1fr;
+  height: calc(100vh - 52px);
   gap: 0;
 }
 
@@ -97,7 +103,7 @@ body::before {
   border-bottom: 1px solid var(--border);
 }
 
-.hint { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+.sidebar-title { font-size: 12px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .08em; }
 
 .search-wrap input {
   width: 100%;
@@ -120,11 +126,14 @@ body::before {
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13.5px;
+  border-radius: 8px;
+  margin: 6px 8px;
 }
 
 .file-list li.active {
-  background: rgba(9, 105, 218, 0.12);
+  background: rgba(47, 111, 235, 0.12);
+  border: 1px solid rgba(47,111,235,0.18);
 }
 
 .viewer {
@@ -134,7 +143,7 @@ body::before {
 }
 
 .viewer-header {
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border);
   color: var(--muted);
   display: flex;
@@ -142,6 +151,8 @@ body::before {
   justify-content: space-between;
   gap: 12px;
 }
+
+.file-title { color: var(--fg); font-weight: 600; }
 
 .zoom-controls { display: flex; align-items: center; gap: 6px; }
 .zoom-controls input[type="range"] { width: 120px; }
@@ -191,16 +202,14 @@ body::before {
 */
 @media (max-width: 1199px) {
   .layout { grid-template-columns: 240px 1fr; }
-  .preview { padding: 22px 28px; }
 }
 
 @media (max-width: 767px) {
   .topbar { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .controls { width: 100%; overflow-x: auto; padding-bottom: 4px; }
+  .toolbar { width: 100%; overflow-x: auto; padding-bottom: 4px; }
   .layout { grid-template-columns: 1fr; }
   .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
   .viewer-header { padding: 10px 14px; flex-direction: column; align-items: flex-start; }
-  .preview { padding: 18px 16px; }
   .file-list li { padding: 10px 12px; }
 }
 
